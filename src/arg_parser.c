@@ -101,7 +101,8 @@ args *parseArgs(int argc, char **argv) {
                 parsed_args->mode = INTERFACES;
                 return parsed_args;
             }
-            parsed_args->interface = argv[++i];
+            parsed_args->interface = malloc(strlen(argv[i+1]) + 1);
+            strcpy(parsed_args->interface, argv[++i]);
         }
 
         // -t PORTS
@@ -154,7 +155,8 @@ args *parseArgs(int argc, char **argv) {
                 parsed_args->mode = ERROR;
                 return parsed_args;
             }
-            parsed_args->host = argv[i];
+            parsed_args->host = malloc(strlen(argv[i]) + 1);
+            strcpy(parsed_args->host, argv[i]);
         }
 
         // Unknown flag
@@ -198,4 +200,13 @@ void printUsage() {
     printf("  -u PORTS       UDP ports  (e.g. 53 | 1-1024 | 53,67)\n");
     printf("  -w TIMEOUT     Timeout in milliseconds (default: 1000)\n");
     printf("  -h, --help     Show this help and exit\n");
+}
+
+void freeArgs(args* argStruct){
+    if(argStruct->tcp_ports) free(argStruct->tcp_ports);
+    if(argStruct->udp_ports) free(argStruct->udp_ports);
+    if(argStruct->host)      free(argStruct->host);
+    if(argStruct->interface) free(argStruct->interface);
+
+    free(argStruct);
 }

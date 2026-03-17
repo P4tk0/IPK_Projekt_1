@@ -5,7 +5,7 @@ enum mode{
     HELP,
     INTERFACES,
     SCAN,
-    ERROR
+    ERROR = 64, //Invalid command line usage error code
 };
 
 typedef struct {
@@ -25,5 +25,6 @@ args *parseArgs(int, char**);
 int *parsePorts(const char*, int*);
 int isFlag(const char*);
 void printUsage();
+void freeArgs(args*);
 
 #endif

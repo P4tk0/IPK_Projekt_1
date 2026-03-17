@@ -3,9 +3,16 @@
 
 #include "arg_parser.h"
 
+args* parsed_args;
+
+void cleanup(){
+    freeArgs(parsed_args);
+}
+
 int main(int argc, char **argv){
+    atexit(cleanup);
     
-    args *parsed_args =  parseArgs(argc, argv);
+    parsed_args =  parseArgs(argc, argv);
 
     switch (parsed_args->mode){
         case HELP:
@@ -24,4 +31,6 @@ int main(int argc, char **argv){
             exit(ERROR);
             break;
     }
+
+    exit(0);
 }

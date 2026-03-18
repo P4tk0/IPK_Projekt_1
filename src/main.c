@@ -1,36 +1,37 @@
 #include <stdio.h>
-#include <stdlib.h>
 
 #include "arg_parser.h"
-
-args* parsed_args;
-
-void cleanup(){
-    freeArgs(parsed_args);
-}
+#include "interfaces.h"
 
 int main(int argc, char **argv){
-    atexit(cleanup);
+    args *parsed_args =  parseArgs(argc, argv);
+    int return_code = 0;
     
-    parsed_args =  parseArgs(argc, argv);
-
-    switch (parsed_args->mode){
-        case HELP:
-            printUsage();
-            break;
-
-        case INTERFACES:
-            printf("Active interfaces:\n");
-            break;
-
-        case SCAN:
-            printf("SCAN - TO DO\n");
-            break;
-
-        case ERROR:
-            exit(ERROR);
-            break;
+    if(parsed_args->mode = ARG_ERROR){
+        return_code = ARG_ERROR;
+    }
+    else{
+        switch (parsed_args->mode){
+            case HELP:
+                printUsage();
+                break;
+            
+            case INTERFACES:
+                if(printInterfaces() != 0)
+                    return_code = PERM_ERROR;
+                break;
+            
+            case SCAN:
+                printf("SCAN - TO DO\n");
+                /*if(scanTcp() != 0)
+                    return_code = TCP_ERROR
+                  if(scanUdp() != 0)
+                    return_code = UDP_ERROR
+                */
+                break;
+        }
     }
 
-    exit(0);
+    freeArgs(parsed_args);
+    return return_code;
 }

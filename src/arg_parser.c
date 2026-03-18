@@ -80,7 +80,7 @@ args *parseArgs(int argc, char **argv) {
 
     if (argc < 2) {
         fprintf(stderr, "No arguments specified, use -h or --help for usage\n");
-        parsed_args->mode = ERROR;
+        parsed_args->mode = ARG_ERROR;
         return parsed_args;
     }
 
@@ -109,12 +109,12 @@ args *parseArgs(int argc, char **argv) {
         else if (strcmp(argv[i], "-t") == 0) {
             if (i + 1 >= argc) {
                 fprintf(stderr, "Error: -t requires a port specification\n");
-                parsed_args->mode = ERROR;
+                parsed_args->mode = ARG_ERROR;
                 return parsed_args;
             }
             parsed_args->tcp_ports = parsePorts(argv[++i], &parsed_args->tcp_port_count);
             if (parsed_args->tcp_ports == NULL) {
-                parsed_args->mode = ERROR;
+                parsed_args->mode = ARG_ERROR;
                 return parsed_args;
             }
         }
@@ -123,12 +123,12 @@ args *parseArgs(int argc, char **argv) {
         else if (strcmp(argv[i], "-u") == 0) {
             if (i + 1 >= argc) {
                 fprintf(stderr, "Error: -u requires a port specification\n");
-                parsed_args->mode = ERROR;
+                parsed_args->mode = ARG_ERROR;
                 return parsed_args;
             }
             parsed_args->udp_ports = parsePorts(argv[++i], &parsed_args->udp_port_count);
             if (parsed_args->udp_ports == NULL) {
-                parsed_args->mode = ERROR;
+                parsed_args->mode = ARG_ERROR;
                 return parsed_args;
             }
         }
@@ -137,13 +137,13 @@ args *parseArgs(int argc, char **argv) {
         else if (strcmp(argv[i], "-w") == 0) {
             if (i + 1 >= argc) {
                 fprintf(stderr, "Error: -w requires a timeout value\n");
-                parsed_args->mode = ERROR;
+                parsed_args->mode = ARG_ERROR;
                 return parsed_args;
             }
             parsed_args->timeout_ms = atoi(argv[++i]);
             if (parsed_args->timeout_ms <= 0) {
                 fprintf(stderr, "Error: -w timeout must be a positive number\n");
-                parsed_args->mode = ERROR;
+                parsed_args->mode = ARG_ERROR;
                 return parsed_args;
             }
         }
@@ -152,7 +152,7 @@ args *parseArgs(int argc, char **argv) {
         else if (!isFlag(argv[i])) {
             if (parsed_args->host != NULL) {
                 fprintf(stderr, "Error: multiple HOST arguments given\n");
-                parsed_args->mode = ERROR;
+                parsed_args->mode = ARG_ERROR;
                 return parsed_args;
             }
             parsed_args->host = malloc(strlen(argv[i]) + 1);
@@ -162,7 +162,7 @@ args *parseArgs(int argc, char **argv) {
         // Unknown flag
         else {
             fprintf(stderr, "Error: unknown argument: %s\n", argv[i]);
-            parsed_args->mode = ERROR;
+            parsed_args->mode = ARG_ERROR;
             return parsed_args;
         }
     }
@@ -171,17 +171,17 @@ args *parseArgs(int argc, char **argv) {
     if (parsed_args->mode == SCAN) {
         if (parsed_args->interface == NULL) {
             fprintf(stderr, "Error: missing required argument -i INTERFACE\n");
-            parsed_args->mode = ERROR;
+            parsed_args->mode = ARG_ERROR;
             return parsed_args;
         }
         if (parsed_args->host == NULL) {
             fprintf(stderr, "Error: missing required argument HOST\n");
-            parsed_args->mode = ERROR;
+            parsed_args->mode = ARG_ERROR;
             return parsed_args;
         }
         if (parsed_args->tcp_port_count == 0 && parsed_args->udp_port_count == 0) {
             fprintf(stderr, "Error: at least one of -t or -u must be specified\n");
-            parsed_args->mode = ERROR;
+            parsed_args->mode = ARG_ERROR;
             return parsed_args;
         }
     }

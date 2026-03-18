@@ -5,7 +5,7 @@ enum mode{
     HELP,
     INTERFACES,
     SCAN,
-    ERROR = 64, //Invalid command line usage error code
+    ARG_ERROR = 64, //Invalid command line usage error code
 };
 
 typedef struct {
